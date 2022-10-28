@@ -1,0 +1,68 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.4'
+	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'java'
+	id "org.sonarqube" version "3.4.0.2513"
+	id "com.jfrog.artifactory" version "4.28.2"
+}
+
+group = 'com.tejmanne'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.2.Final'
+	implementation group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '4.29.2'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.2.Final"	
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+compileJava {
+	options.compilerArgs = [
+		"-Amapstruct.defaultComponentModel=spring"
+	]
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', '$buildDir/generated/sources/annotationProcessor/java/']
+        }
+    }
+}

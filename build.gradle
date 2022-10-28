@@ -69,8 +69,8 @@ sourceSets {
 
 publishing {
 	publications{
-		mavenJava(MavenPublication){
-			from bootJar
+		bootJava(MavenPublication) {
+			artifact tasks.named("bootJar")
 		}
 	}
 }

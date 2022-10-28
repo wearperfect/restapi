@@ -67,14 +67,10 @@ sourceSets {
     }
 }
 
-jar {
-	enabled = false
-}
-
 publishing {
 	publications{
-		bootJava(MavenPublication) {
-			artifact tasks.named("bootJar")
+		mavenJava(MavenPublication){
+			from bootJar
 		}
 	}
 }
@@ -129,4 +125,8 @@ artifactory {
 	clientConfig.info.setProject('project-key')
 	clientConfig.timeout = 600 // Artifactory connection timeout (in seconds). The default timeout is 300 seconds.
 	clientConfig.setInsecureTls(false) // Set to true to skip TLS certificates verification (false by default).
+}
+
+artifactoryPublish {
+	dependsOn bootRepackage
 }

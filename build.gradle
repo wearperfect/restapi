@@ -67,6 +67,10 @@ sourceSets {
     }
 }
 
+jar {
+	enabled = false
+}
+
 publishing {
 	publications{
 		bootJava(MavenPublication) {

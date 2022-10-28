@@ -69,13 +69,8 @@ sourceSets {
 
 publishing {
 	publications{
-		bootJava(MavenPublication) {
-			artifact tasks.named("bootJar")
-		}
-	}
-	repositories {
-		maven {
-			url 'https://tejazz.jfrog.io/artifactory'
+		mavenJava(MavenPublication) {
+			artifact bootJar
 		}
 	}
 }
